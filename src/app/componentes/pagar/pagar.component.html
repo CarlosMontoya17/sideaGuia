@@ -1,0 +1,60 @@
+<div id="app">
+  <app-sidebar></app-sidebar>
+  <div id="main">
+    <header class="mb-3">
+      <a  class="burger-btn d-block d-xl-none">
+          <i class="bi bi-justify fs-3"></i>
+      </a>
+  </header>
+    <h2>Pagar</h2>
+        <p>En esta sección podrás liquidar tu saldo para seguir teniendo el servicio</p>
+    <div class="page-content">
+      <section class="list-group-button-badge">
+        <div class="row match-height">
+          <div class="col-lg-6 col-md-12">
+            <div class="card">
+                <div class="card-header">
+                    <h4 class="card-title">Pago OXXO</h4>
+                </div>
+                <div class="card-content">
+                    <div class="card-body">
+                      <p>No te olvides de adjuntar tu comprobante, al realizar tu pago
+                        <ul class="list-group">
+                          <li
+                            class="list-group-item d-flex justify-content-between align-items-center">
+                            <span>Saldo a pagar</span>
+                          <h2>$ {{result.saldo}}.00</h2>
+                          </li>
+                        </ul>
+                        <div class="row mt-5">
+                          <div class="col-md-4">
+                            <button class="btn btn-primary btn-block" (click)="generatePDF()">Imprimir formato de OXXO</button>&nbsp;
+
+                            <button class="btn btn-primary btn-block" (click)="checkout()">Tarjeta</button>
+                          </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+            <div class="col-lg-6 col-md-12">
+                <div class="card">
+                    <div class="card-header">
+                        <h4 class="card-title">Adjuntar comprobante</h4>
+                    </div>
+                    <div class="card-content">
+                      <div class="card-body">
+                        <p class="card-text">Adjunta tu imagen
+                        </p>
+                        <!-- Basic file uploader -->
+                        <input type="file" class="basic-filepond" (change)="changeComprobante($event)">
+                        <a class="btn btn-success" (click)="addComprobante()" style="margin: 1rem;">Subir archivo</a>
+                    </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+    </div>
+  </div>
+</div>

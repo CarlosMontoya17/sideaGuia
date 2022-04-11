@@ -1,0 +1,142 @@
+<div class="app">
+    <app-sidebar></app-sidebar>
+    <div id="main">
+        <header class="mb-3">
+            <a class="burger-btn d-block d-xl-none">
+                <i class="bi bi-justify fs-3"></i>
+            </a>
+        </header>
+        <section class="section">
+            <div class="row" id="table-hover-row" *ngIf="panelPrincipal==0">
+                <div class="col-12">
+                    <div class="card">
+                        <div class="card-header">
+                            <h4 class="card-title">Pagos</h4>
+                        </div>
+                        <div class="card-content">
+                            <div class="card-body">
+                                <p>En esta seccion podras consultar las estadisticas y todo lo relacionado a los pagos.
+                                </p>
+                                <div class="row" style="display: flex; align-items: center; align-content: center; flex-direction: column;">
+                                    <div class="col-md-6 mb-4">
+
+                                    </div>
+                                    <div class="col-md-6 mb-4">
+                                        <div class="input-group mb-3">
+                                            <select class="form-select" id="inputGroupSelect02"
+                                                (change)="onChangeCorte($event)">
+                                                <option selected hidden="">Selecciona el corte</option>
+                                                <option value="actual">Actual</option>
+                                                <option *ngFor="let corte of cortesFechas"
+                                                    value="{{corte.fechaUno}}{{corte.fechaDos}}">{{corte.fechaUno}} al
+                                                    {{corte.fechaDos}}</option>
+                                            </select>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="row" id="basic-table">
+                                    <div class="col-12 col-md-6">
+                                    </div>
+                                    <div class="col-12 col-md-6">
+                                        <div class="card-content">
+                                            <div class="card-body">
+                                            </div>
+                                            <!-- Table with no outer spacing -->
+                                            <div class="table-responsive" style="text-align:center;">
+                                                <h3 class="card-title" *ngIf="result.rol=='ejecutivo'">Mi cuenta</h3>
+                                                <table class="table mb-2 table-md">
+                                                    <thead>
+                                                        <tr *ngIf="result.rol=='ejecutivo'">
+                                                            <th>Cantidad de actas solicitadas</th>
+                                                            <th>Total a pagar (tu cuenta)</th>
+                                                            <th>Total a pagar cibers</th>
+                                                            <th>Total de ganancia cibers</th>
+                                                            <th>Total a pagar</th>
+                                                        </tr>
+                                                        <tr *ngIf="result.rol=='admin'">
+                                                            <th>Total a pagar</th>
+                                                            <th>Total Ganancia</th>
+                                                        </tr>
+                                                    </thead>
+                                                    <tbody>
+                                                        <tr *ngIf="result.rol=='ejecutivo'">
+                                                            <td>{{result.descargadas}}</td>
+                                                            <td>$ {{result.saldo}}</td>
+                                                            <td>$ {{totalPagar}}</td>
+                                                            <td>$ {{totalGanancia}}</td>
+                                                            <td>$ {{totalPagar + result.saldo}}</td>
+                                                        </tr>
+                                                        <tr *ngIf="result.rol=='admin'">
+                                                            <td>$ {{totalPagar}}</td>
+                                                            <td>$ {{totalGanancia}}</td>
+                                                        </tr>
+                                                    </tbody>
+                                                </table>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <h3 class="card-title" *ngIf="result.rol=='ejecutivo'">Cibers</h3>
+                                <h3 class="card-title" *ngIf="result.rol=='admin'">Ejecutivos y Cibers</h3>
+                            </div>
+                            <!-- table hover -->
+                            <div class="table-responsive">
+                                <table class="table table-hover mb-0" style="text-align: center;">
+                                    <thead>
+                                        <tr>
+                                            <th *ngIf="result.rol=='ejecutivo'">Ciber</th>
+                                            <th *ngIf="result.rol=='admin'">Ejecutivo</th>
+                                            <th>Nacimiento</th>
+                                            <th>Matrimonio</th>
+                                            <th>Divorcio</th>
+                                            <th>Defuncion</th>
+                                            <th *ngIf="result.rol=='admin'">Total Ejecutivo</th>
+                                            <th>Total Cibers</th>
+                                            <th>A pagar</th>
+                                            <th>Ganancia</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody *ngIf="result.rol=='admin'">
+                                        <tr *ngFor="let usuario of data; let i=index">
+                                            <td>{{usuario.usuario}}</td>
+                                            <td>{{usuario.nacimiento}}</td>
+                                            <td>{{usuario.matrimonio}}</td>
+                                            <td>{{usuario.divorcio}}</td>
+                                            <td>{{usuario.defuncion}}</td>
+                                            <td>$ {{usuario.saldo}}</td>
+                                            <td *ngIf="totalCiber[usuario.id]!=null">$ {{totalCiber[usuario.id]}}</td>
+                                            <td *ngIf="totalCiber[usuario.id]==null">$ 0</td>
+                                            <td *ngIf="totalAPagar[usuario.id]!=null">$ {{totalAPagar[usuario.id]}}</td>
+                                            <td *ngIf="totalAPagar[usuario.id]==null">$ 0</td>
+                                            <td *ngIf="totalCiber[usuario.id]!=null">$
+                                                {{this.totalCiber[usuario.id]-totalAPagar[usuario.id] + usuario.saldo}}
+                                            </td>
+                                            <td *ngIf="totalAPagar[usuario.id]==null">$ {{usuario.saldo}}</td>
+                                        </tr>
+                                    </tbody>
+                                    <tbody *ngIf="result.rol=='ejecutivo'">
+                                        <tr *ngFor="let usuario of data; let i=index">
+                                            <td>{{usuario.usuario}}</td>
+                                            <td>{{usuario.nacimiento}}</td>
+                                            <td>{{usuario.matrimonio}}</td>
+                                            <td>{{usuario.divorcio}}</td>
+                                            <td>{{usuario.defuncion}}</td>
+                                            <td *ngIf="totalCiber[usuario.id]!=null">$ {{totalCiber[usuario.id]}}</td>
+                                            <td *ngIf="totalCiber[usuario.id]==null">$ 0</td>
+                                            <td *ngIf="totalAPagar[usuario.id]!=null">$ {{totalAPagar[usuario.id]}}</td>
+                                            <td *ngIf="totalAPagar[usuario.id]==null">$ 0</td>
+                                            <td *ngIf="totalCiber[usuario.id]!=null">$
+                                                {{this.totalCiber[usuario.id]-totalAPagar[usuario.id]}}</td>
+                                            <td *ngIf="totalAPagar[usuario.id]==null">$ 0</td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </div>
+</div>

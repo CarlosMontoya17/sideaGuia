@@ -1,0 +1,316 @@
+<div id="app">
+    <app-sidebar></app-sidebar>
+    <div id="main">
+        <header class="mb-3">
+            <a class="burger-btn d-block d-xl-none">
+                <i class="bi bi-justify fs-3"></i>
+            </a>
+        </header>
+        <div class="page-heading">
+            <div class="page-title">
+                <div class="row">
+                    <div class="col-12 col-md-6 order-md-1 order-last">
+                        <h3>Historial</h3>
+                    </div>
+                    <div class="col-12 col-md-6 order-md-1 order-last">
+                        <ul class="nav nav-tabs" id="myTab" role="tablist">
+                            <!-- <li *ngIf="isEjecutivo==false" class="nav-item" role="presentation"> (click)="cambiarTabla(1)"    [ngClass]="isEjecutivo ? 'nav-link active' : 'nav-link'"  (click)="cambiarTabla(2)"-->
+                            <li class="nav-item" role="presentation" *ngIf="result.rol=='admin'"> 
+                                <a style="font-size: large;" class="nav-link active" id="home-tab" data-bs-toggle="tab"
+                                    href="" role="tab" aria-controls="home" aria-selected="true"
+                                    (click)="cambiarTabla(1)" checked>Ejecutivos</a>
+                            </li>
+                            <li class="nav-item" role="presentation" *ngIf="isEjecutivo ? 'nav-link ' : 'nav-link active'">
+                                <a style="font-size: large;" class="nav-link" id="profile-tab" data-bs-toggle="tab"
+                                    href="" *ngIf="result.rol=='admin'" role="tab"
+                                    aria-controls="profile" aria-selected="false" (click)="cambiarTabla(2)">Clientes</a>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <section class="section">
+            <div class="row" id="table-inverse">
+                <div class="col-12">
+                    <section class="input-group-select" *ngIf="result.rol=='admin'">
+                        <div class="row" *ngIf="tipoUsuario==1">
+                            <div class="col-12">
+                                <div class="card">
+                                    <div class="card-header">
+                                        <h4 class="card-title">Menu</h4>
+                                    </div>
+                                    <div class="card-content">
+                                        <div class="card-body">
+                                            <div class="row">
+                                                <div class="col-md-6 mb-4" *ngIf="isEjecutivo==false">
+                                                    <div class="input-group mb-3">
+                                                        <select class="form-select" id="inputGroupSelect01"
+                                                            (change)="onChangeEjecutivos($event)">
+                                                            <option selected hidden default>Selecciona un ejecutivo
+                                                            </option>
+                                                            <option *ngFor="let ejecutivo of ejecutivos"
+                                                                value="{{ejecutivo.id}}">{{ejecutivo.usuario}}</option>
+                                                        </select>
+                                                    </div>
+                                                </div>
+                                                <div class="col-md-6 mb-4">
+                                                    <div class="input-group mb-3">
+                                                        <select class="form-select" id="inputGroupSelect01" (change)="onChangeCortes($event)">
+                                                            <option selected hidden="">Selecciona un corte</option>
+                                                            <option value="actual">Actual</option>
+                                                            <option *ngFor="let corte of cortesFechas"
+                                                    value="{{corte.fechaUno}}{{corte.fechaDos}}">{{corte.fechaUno}} al
+                                                    {{corte.fechaDos}}</option>
+                                                        </select>
+                                                        <a class="btn btn-primary" (click)="verHistorial()">Ver historial</a>
+                                                    </div>
+                                                </div>
+                                                <div class="col-md-6 mb-4">
+                                                    <div class="input-group mb-3 ">
+                                                        <a class="btn btn-primary"
+                                                            (click)="getHistorial(result.id, inicioCorte, finCorte)">Mi historial</a>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row" *ngIf="tipoUsuario==2">
+                            <div class="col-12">
+                                <div class="card">
+                                    <div class="card-header">
+                                        <h4 class="card-title">Menu</h4>
+                                    </div>
+                                    <div class="card-content">
+                                        <div class="card-body">
+                                            <div class="row">
+                                                <div class="col-md-6 mb-4">
+                                                    <div class="input-group mb-3">
+                                                        <select class="form-select" id="inputGroupSelect01"
+                                                            (change)="onChangeEjecutivos2($event)">
+                                                            <option selected hidden default>Selecciona un ejecutivo
+                                                            </option>
+                                                            <option *ngFor="let ejecutivo of ejecutivos"
+                                                                value="{{ejecutivo.id}}">{{ejecutivo.usuario}}</option>
+                                                        </select>
+                                                    </div>
+                                                </div>
+                                                <div class="col-md-6 mb-4">
+                                                    <div class="input-group mb-3">
+                                                        <select class="form-select" id="inputGroupSelect01"
+                                                            (change)="onChangeClientes($event)">
+                                                            <option selected hidden default>Selecciona un ciber</option>
+                                                            <option *ngFor="let ciber of cibers" value="{{ciber.id}}">
+                                                                {{ciber.usuario}}</option>
+                                                        </select>
+                                                    </div>
+                                                </div>
+                                                <div class="col-md-6 mb-4">
+                                                    <div class="input-group mb-3">
+                                                        <select class="form-select" id="inputGroupSelect01" (change)="onChangeCortes($event)">
+                                                            <option selected hidden="">Selecciona un corte</option>
+                                                            <option value="actual">Actual</option>
+                                                            <option *ngFor="let corte of cortesFechas"
+                                                    value="{{corte.fechaUno}}{{corte.fechaDos}}">{{corte.fechaUno}} al
+                                                    {{corte.fechaDos}}</option>
+                                                        </select>
+                                                    </div>
+                                                </div>
+                                                <div class="col-md-6 mb-4">
+                                                    <div class="input-group mb-3 ">
+                                                        <a class="btn btn-primary" (click)="verHistorial()">Ver
+                                                            historial</a>
+                                                    </div>
+                                                </div>
+                                                <div class="col-md-6 mb-4">
+                                                    <div class="input-group mb-3 ">
+                                                        <a class="btn btn-primary" (click)="getHistorial(result.id, inicioCorte, finCorte)">Ver mi
+                                                            historial</a>
+                                                    </div>
+                                                </div>
+                                                <!--
+                                                <div class="col-md-6 mb-4">
+                                                    <h6>Cibers</h6>
+                                                    <div class="input-group mb-3">
+                                                        <select class="form-select" id="inputGroupSelect01" (change)="onChangeClientes($event)">
+                                                            <option selected hidden="">Selecciona un cliente</option>
+                                                            <option  *ngFor="let cliente of clientes" value="{{cliente.id}}">{{cliente.usuario}}</option>
+                                                        </select>
+                                                        <a class="btn btn-primary" (click)="verHistorial()">Ver historial</a>
+                                                    </div>
+                                                </div>
+                                                -->
+
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </section>
+                    <section class="input-group-select" *ngIf="result.rol=='ejecutivo'">
+                        <div class="row">
+                            <div class="col-12">
+                                <div class="card">
+                                    <div class="card-header">
+                                        <h4 class="card-title">Menu</h4>
+                                    </div>
+                                    <div class="card-content">
+                                        <div class="card-body">
+                                            <div class="row">
+                                                <div class="col-md-6 mb-4">
+                                                    <h6>Cibers</h6>
+                                                    <div class="input-group mb-3">
+                                                        <select class="form-select" id="inputGroupSelect01"
+                                                            (change)="onChangeClientes($event)">
+                                                            <option selected hidden="">Selecciona un ciber</option>
+                                                            <option *ngFor="let cliente of clientes"
+                                                                value="{{cliente.id}}">{{cliente.usuario}}</option>
+                                                        </select>
+                                                    </div>
+                                                </div>
+                                                <div class="col-md-6 mb-4">
+                                                    <h6>Corte</h6>
+                                                    <div class="input-group mb-3">
+                                                        <select class="form-select" id="inputGroupSelect01" (change)="onChangeCortes($event)">
+                                                            <option selected hidden="">Selecciona un corte</option>
+                                                            <option value="actual">Actual</option>
+                                                            <option *ngFor="let corte of cortesFechas"
+                                                    value="{{corte.fechaUno}}{{corte.fechaDos}}">{{corte.fechaUno}} al
+                                                    {{corte.fechaDos}}</option>
+                                                        </select>
+                                                        <a class="btn btn-primary" (click)="verHistorial()">Ver
+                                                            historial</a>
+                                                    </div>
+                                                </div>
+                                                <div class="col-md-6 mb-4">
+                                                    <div class="input-group mb-3">
+                                                        <div class="buttons">
+                                                            <a class="btn btn-primary"
+                                                                (click)="getHistorial(result.id, inicioCorte, finCorte)">Ver
+                                                                mi historial</a>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </section>
+                    <div class="card">
+                        <div class="card-header">
+                            <h4 class="card-title">Historial</h4>
+                        </div>
+                        <div class="card-content">
+                            <!-- table with dark -->
+                            <div class="card-body">
+                                <p>Estas fueron tus actas obtenidas</p>
+                                <div class="row">
+                                    <div class="col-md-6 mb-4" *ngIf="result.rol=='cliente'">
+                                        <div class="input-group mb-3">
+                                            <select class="form-select" id="inputGroupSelect01" (change)="onChangeSubclientes($event)">
+                                                <option selected hidden="">Selecciona un subcliente</option>
+                                                <option value="mi">Mi historial</option>
+                                                <option *ngFor="let usuario of usuarios"
+                                        value="{{usuario.id}}">{{usuario.usuario}}</option>
+                                            </select>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-6 mb-4" *ngIf="result.rol=='cliente'">
+                                        <div class="input-group mb-3">
+                                            <select class="form-select" id="inputGroupSelect01" (change)="onChangeCortes($event)">
+                                                <option selected hidden="">Selecciona un corte</option>
+                                                <option value="actual">Actual</option>
+                                                <option *ngFor="let corte of cortesFechas"
+                                        value="{{corte.fechaUno}}{{corte.fechaDos}}">{{corte.fechaUno}} al
+                                        {{corte.fechaDos}}</option>
+                                            </select>
+                                            <a class="btn btn-primary" (click)="verHistorial()">Ver
+                                                            historial</a>
+                                        </div>
+                                    </div>
+                                </div>
+                                
+                                <div class="row" id="basic-table">
+                                    <div class="col-12 col-md-6">
+                                    </div>
+                                    <div class="col-12 col-md-6">
+                                        <div class="card-content">
+                                            <div class="card-body">
+                                            </div>
+                                            <!-- Table with no outer spacing -->
+                                            <div *ngIf="result.rol!='subcliente'" class="table-responsive" style="text-align:center;">
+                                                <table class="table mb-2 table-md">
+                                                    <thead>
+                                                        <tr>
+                                                            <th>Total</th>
+                                                        </tr>
+                                                    </thead>
+                                                    <tbody>
+                                                        <tr>
+                                                            <td>$ {{total}}</td>
+                                                        </tr>
+                                                    </tbody>
+                                                </table>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <!-- table with light -->
+                            <div class="table-responsive">
+                                <table class="table table-light mb-0" style="text-align: center;">
+                                    <thead>
+                                        <tr>
+                                            <th>Dato</th>
+                                            <th>Precio</th>
+                                            <th>Documento</th>
+                                            <th>Estado</th>
+                                            <th>Fecha</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr *ngFor="let data of historialUsuario">
+                                            <td>{{data.dato}}</td>
+                                            <td>$ {{data.costo}}</td>
+                                            <td>{{data.tipoActa}}</td>
+                                            <td>{{data.estado}}</td>
+                                            <td>{{data.createdAt | date: 'dd/MM/y - hh:mm:ss a'}}</td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+        <div style="display: flex; flex-direction: column; height: 100%;">
+            <div style="margin: 10px 0;">
+              
+              <button (click)="onBtnExport()">Download CSV export file</button>
+            </div>
+            <div style="flex: 1 1 0; position: relative;">
+              <div id="gridContainer">
+                <ag-grid-angular
+                  #agGrid
+                  style="width: 100%; height: 500px;"
+                  id="myGrid"
+                  class="ag-theme-alpine"
+                  [defaultColDef]="defaultColDef"
+                  [suppressExcelExport]="true"
+                  [popupParent]="popupParent"
+                  [columnDefs]="columnDefs"
+                  [rowData]="rowData"
+                  (gridReady)="onGridReady($event)"
+                ></ag-grid-angular>
+              </div>
+            </div>
+          </div>
+    </div>
+</div>

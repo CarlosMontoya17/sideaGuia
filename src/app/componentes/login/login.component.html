@@ -1,0 +1,38 @@
+<body>
+    <div id="auth">
+        <div class="row h-100">
+            <div class="col-lg-5 col-12">
+                <div class="auth-logo">
+                    <a> <img src="assets/images/acta.png" style="width: 200px;"/></a>
+                </div>
+                <div id="auth-left">
+                    <h1 class="auth-title">Login</h1>
+                    <p class="auth-subtitle mb-5">El mejor sistema para adquirir actas</p>
+                    <form action="index.html">
+                        <div class="form-group position-relative has-icon-left mb-4">
+                            <input [(ngModel)]="username" type="text" id="username" class="form-control form-control-xl" placeholder="Usuario" name="username">
+                            <div class="form-control-icon">
+                                <i class="bi bi-person"></i>
+                            </div>
+                        </div>
+                        <div class="error-input" id="error-user">Debe ingresar un usuario válido.</div>
+                        <br>
+                        <div class="form-group position-relative has-icon-left mb-4">
+                            <input  type="password"  id="password" class="form-control form-control-xl" [(ngModel)]="password" placeholder="Contraseña" name="password" >
+                            <div class="form-control-icon">
+                                <i class="bi bi-shield-lock"></i>
+                            </div>
+                        </div>
+                        <div class="error-input" id="error-password">Debe ingresar una contraseña válida.</div>
+                        <button class="btn btn-primary btn-block btn-lg shadow-lg mt-5" (click)="validarLogin(username, password)">Iniciar sesión</button>
+                    </form>
+                </div>
+            </div>
+            <div class="col-lg-7 d-none d-lg-block">
+                <div id="auth-right">
+
+                </div>
+            </div>
+        </div>
+    </div>
+</body>

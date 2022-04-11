@@ -1,0 +1,58 @@
+<div id="app">
+    <app-sidebar></app-sidebar>
+    <div id="main">
+        <header class="mb-3">
+            <a class="burger-btn d-block d-xl-none">
+                <i class="bi bi-justify fs-3"></i>
+            </a>
+        </header>
+        <section class="section">
+            <div class="row" id="table-inverse">
+                <div class="col-12">
+                    <div class="card">
+                        <div class="card-header">
+                            <h4 class="card-title">Historial</h4>
+                        </div>
+                        <div class="card-content">
+
+                            <div class="card-body">
+                                <p>Estas fueron tus actas obtenidas</p>
+                                <div class="row">
+                                    <div class="col-md-6 mb-4">
+                                        <div class="input-group mb-3">
+                                            <select class="form-select" id="inputGroupSelect01"
+                                                (change)="onChangeCortes($event)">
+                                                <option selected hidden="">Selecciona un corte</option>
+                                                <option value="actual">Actual</option>
+                                                <option *ngFor="let corte of cortesFechas"
+                                                    value="{{corte.fechaUno}}{{corte.fechaDos}}">{{corte.fechaUno}} al
+                                                    {{corte.fechaDos}}</option>
+                                            </select>
+                                            <a class="btn btn-primary" (click)="verHistorial()">Ver
+                                                historial</a>
+                                        </div>
+                                    </div>
+                                </div>
+
+                            </div>
+
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div style="display: flex; flex-direction: column; height: 100%;">
+                <div style="margin: 10px 0;">
+                    <button (click)="onBtnExport()">Download CSV export file</button>
+                </div>
+                <div style="flex: 1 1 0; position: relative;">
+                    <div id="gridContainer">
+                        <ag-grid-angular #agGrid style="width: 100%; height: 500px;" id="myGrid" class="ag-theme-alpine"
+                            [defaultColDef]="defaultColDef" [suppressExcelExport]="true" [popupParent]="popupParent"
+                            [columnDefs]="columnDefs" [rowData]="rowData" (gridReady)="onGridReady($event)">
+                        </ag-grid-angular>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </div>
+</div>

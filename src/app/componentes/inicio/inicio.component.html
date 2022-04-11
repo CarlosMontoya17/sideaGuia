@@ -1,0 +1,527 @@
+
+    <div id="app">
+        <app-sidebar></app-sidebar>
+        <div id="main">
+            <header class="mb-3">
+                <a class="burger-btn d-block d-xl-none">
+                    <i class="bi bi-justify fs-3"></i>
+                </a>
+            </header>
+            <div class="page-content">
+                <section class="row">
+                    <img src="assets/images/bannerweb.jpg" alt="logo mexicano" height="200">
+                    <div class="mb-3"></div>
+                    <div class="col-12 col-lg-9">
+                        <div class="row">
+                            <div *ngIf="result.rol!='subcliente'" class="col-6 col-lg-3 col-md-6">
+                                <div class="card">
+                                    <div class="card-body px-3 py-4-5">
+                                        <div class="row">
+                                            <div class="col-md-4">
+                                                <div class="stats-icon purple">
+                                                    <i class="iconly-boldDocument"></i>
+                                                </div>
+                                            </div>
+                                            <div class="col-md-8">
+                                                <h6 class="text-muted font-semibold">Actas descargadas</h6>
+                                                <h6 class="font-extrabold mb-0">{{result.descargadas}}</h6>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div *ngIf="result.rol!='subcliente'" class="col-6 col-lg-3 col-md-6">
+                                <div class="card">
+                                    <div class="card-body px-3 py-4-5">
+                                        <div class="row">
+                                            <div class="col-md-4">
+                                                <div class="stats-icon blue">
+                                                    <i class="iconly-boldWallet"></i>
+                                                </div>
+                                            </div>
+                                            <div class="col-md-8">
+                                                <h6 class="text-muted font-semibold">A pagar</h6>
+                                                <h6 class="font-extrabold mb-0">$ {{result.saldo}}</h6>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-6 col-lg-3 col-md-6">
+                                <div class="card">
+                                    <div class="card-body px-3 py-4-5">
+                                        <div class="row">
+                                            <div class="col-md-4">
+                                                <div class="stats-icon red">
+                                                    <i class="iconly-boldActivity"></i>
+                                                </div>
+                                            </div>
+                                            <div class="col-md-8">
+                                                <h6 class="text-muted font-semibold">Corte actual</h6>
+                                                <h6 class="font-extrabold mb-0">{{inicioCorte | date: 'd MMMM'}} - {{finCorte | date: 'd MMMM'}}</h6>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-6 col-lg-3 col-md-6">
+                                <div class="card">
+                                    <div class="card-body px-3 py-4-5">
+                                        <div class="row">
+                                            <div class="col-md-4">
+                                                <div class="stats-icon green">
+                                                    <i class="iconly-boldSetting"></i>
+                                                </div>
+                                            </div>
+                                            <div class="col-md-8">
+                                                <h6 class="text-muted font-semibold">Estado del sistema</h6>
+                                                <h6 *ngIf="sistema==0" class="font-extrabold mb-0" style="color: orangered;">Fuera de servicio
+                                                </h6>
+                                                <h6 *ngIf="sistema==1" class="font-extrabold mb-0" style="color: limegreen;">En línea
+                                                </h6>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="row" id="previsualizarActa" *ngIf="preview==1" style="margin-top: 15px; display: flex; position: relative; align-items: center;">
+                            <div class="alert alert-warning justify-content-center" style="margin-top: 15px;">
+                                <h3 *ngIf="costo==0 && result.rol=='admin'" style="color: #9b2141;">Gratis</h3>
+                                <h3 *ngIf="costo!=0 && result.rol!='subcliente'" style="color: #9b2141;">$ {{costo}}</h3>
+                                <p style="font-size: large;"><i class="bi bi-exclamation-triangle"></i> <strong>  Confirmo que es el acta solicitada y acepto el cobro.</strong></p>
+                                <br>
+                                <div class="buttons">
+                                    <a class="btn btn-success" (click)="preDescarga()">Descargar</a>
+                                    <a class="btn btn-danger" (click)="cancelar()">Cancelar</a>
+                                </div>
+                            </div>
+                            <div class="col-md-auto" style="width: 250px; ">
+                                <img src="{{pdfSrc}}">
+                            </div>  
+                        </div>
+                    </div>
+                    
+                    <div class="col-12 col-lg-3 col-md-6">
+                        <div class="card">
+                            <div class="card-body py-4 px-5">
+                                <div class="d-flex align-items-center">
+                                    <div class="avatar avatar-xl">
+                                        <img src="assets/images/faces/avatar.png" alt="Face 1">
+                                    </div>
+                                    <div class="ms-3 name">
+                                        <h5 class="font-bold">{{usuario}}</h5>
+                                        <h6 style="color: red; cursor: pointer; " (click)="logout()" class="mb-0">Cerrar
+                                            sesión</h6>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="row" id="menuPrincipalActa"  *ngIf="preview==0"> 
+                        <div class="col-12" >
+                            <div class="card">
+                                <div class="card-header">
+                                    <h4>Menu </h4>
+                                    <div class="card-content">
+                                        <div class="card-body">
+                                            <div class="row">
+                                                <div class="col-md-6 mb-4">
+                                                    <h6>Busqueda por</h6>
+                                                    <fieldset class="form-group">
+                                                        <select class="form-select" id="basicSelect"
+                                                            [ngModel]="tipoBusqueda"
+                                                            (ngModelChange)="onChange($event)">
+                                                            <option selected hidden>Seleccione el tipo de busqueda</option>
+                                                            <option value="1">CURP</option>
+                                                            <option value="3">Datos personales</option>
+                                                            <option disabled>Cadena digital</option>
+                                                            <option disabled >Datos del registro civil</option>
+                                                        </select>
+                                                    </fieldset>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="card-body" *ngIf="tipoBusqueda==1">
+                                    <section id="basic-horizontal-layouts" >
+                                        <div class="row match-height">
+                                            <div class="col-md-6 col-12">
+                                                <div class="card">
+                                                    <div class="card-header">
+                                                        <h4 class="card-title">Actas</h4>
+                                                    </div>
+                                                    <div class="card-content">
+                                                        <div class="card-body">
+                                                            <form class="form form-horizontal">
+                                                                <div class="form-body">
+                                                                    <div class="row">
+                                                                        <div class="col-md-4">
+                                                                            <label>Acto registral</label>
+                                                                        </div>
+                                                                        <div class="col-md-6 mb-4" >
+                                                                            <div class="error-input" id="error-acto">Debe ingresar un acto registral.</div>
+                                                                            <fieldset class="form-group">
+                                                                                <select class="form-select" id="basicSelect" name="tipoActa" [ngModel]="actoRegistral" (ngModelChange)="onChangeTwo($event)">
+                                                                                    <option selected hidden>Seleccione el acto registral</option>
+                                                                                    <option value="1">NACIMIENTO</option>
+                                                                                    <option value="2">DEFUNCION</option>
+                                                                                    <option value="3">MATRIMONIO</option>
+                                                                                    <option value="4">DIVORCIO</option>
+                                                                                    <option disabled>RECONOCIMIENTO</option>
+                                                                                    <option disabled>ADOPCION</option>
+                                                                                    <option disabled>SENTENCIA</option>
+                                                                                </select>
+                                                                            </fieldset>
+                                                                        </div>
+                                                                        
+                                                                        <div class="col-md-4">
+                                                                            <label>CURP</label>
+                                                                        </div>
+                                                                        <div class="col-md-8 form-group">
+                                                                            <div class="error-input" id="error-curp">Debe ingresar una CURP</div>
+                                                                            <input type="text" id="curp" class="form-control" required style="text-transform:uppercase"
+                                                                                name="curp" placeholder="Ingresa tu CURP" [ngModel]="curp" (ngModelChange)="onChangeCurp($event)" >
+                                                                        </div>
+                                                                        <div class="col-md-4">
+                                                                            <label>Entidad de registro</label>
+                                                                        </div>
+                                                                        <div class="col-md-8 form-group">
+                                                                           <input class="form-control" name="entidad" required [ngModel]="entidad" readonly>
+                                                                        </div>
+                                                                        <div class="col-sm-12 d-flex justify-content-end">
+                                                                            <button type="submit"
+                                                                                class="btn btn-primary me-1 mb-1" (click)="buscar()">Buscar</button>
+                                                                            <button type="button" (click)="limpiar()"
+                                                                                class="btn btn-light-secondary me-1 mb-1" (click)="limpiar()">Limpiar</button>
+                                                                        </div>
+                                                                        <div class="card-body col-sm-12 d-flex justify-content-end" *ngIf="mostrarLoader==1">
+                                                                            <img src="assets/vendors/svg-loaders/ball-triangle.svg" class="me-4"
+                                                                                style="width: 3rem" alt="audio">
+                                                                        </div>
+                                                                    </div>
+                                                                </div>
+                                                            </form>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </section>
+                                </div>
+                                <div class="card-body" *ngIf="tipoBusqueda==3">
+                                    <div class="row match-height">
+                                        <div class="col-12">
+                                            <div class="card">
+                                                <div class="card-header">
+                                                    <h4 class="card-title">Busqueda de Actas por Datos
+                                                        Personales</h4>
+                                                </div>
+                                                <div class="card-content">
+                                                    <div class="card-body">
+                                                        <form class="form">
+                                                            <div class="row">
+                                                                <div class="col-md-6 col-12">
+                                                                    <div class="form-group">
+                                                                        <label for="first-name-column">Acto
+                                                                            registral*:</label>
+                                                                        <div class="error-input" id="error-acto">
+                                                                            Debe ingresar un
+                                                                            acto registral.</div>
+                                                                        <fieldset class="form-group">
+                                                                            <select class="form-select"
+                                                                                id="basicSelectDatos"
+                                                                                name="tipoActaDatos" [ngModel]="actoRegistral" (ngModelChange)="onChangeTwo($event)">
+                                                                                <option selected hidden>
+                                                                                    Seleccione el acto registral
+                                                                                </option>
+                                                                                <option value="1">NACIMIENTO</option>
+                                                                                <option value="2">DEFUNCION</option>
+                                                                                <option value="3">MATRIMONIO</option>
+                                                                                <option value="4">DIVORCIO</option>
+                                                                                <option disabled>RECONOCIMIENTO</option>
+                                                                                <option disabled>ADOPCION</option>
+                                                                                <option disabled>SENTENCIA</option>
+                                                                            </select>
+                                                                        </fieldset>
+                                                                    </div>
+                                                                </div>
+                                                                <!--*ngFor="let dato of datos" -->
+                                                                <div class="col-md-6 col-12" >
+                                                                    <div class="error-input" id="error-estado">
+                                                                        Debe ingresar un
+                                                                        estado</div>
+                                                                    <div class="form-group">
+                                                                        <label for="last-name-column">Entidad de
+                                                                            Registro*:</label>
+                                                                        <fieldset class="form-group" >
+                                                                            <select class="form-select" id="estados"
+                                                                                name="estados" [ngModel]="entidad" (ngModelChange)="onChangeCurp($event)">
+                                                                                <option selected hidden>
+                                                                                    {{entidad}}</option>
+                                                                                <option value="-----------AS-----">AGUASCALIENTES</option>
+                                                                                <option value="-----------BC-----">BAJA CALIFORNIA</option>
+                                                                                <option value="-----------CB-----">BAJA CALIFORNIA SUR</option>
+                                                                                <option value="-----------CC-----">CAMPECHE</option>
+                                                                                <option value="-----------CS-----">CHIAPAS</option>
+                                                                                <option value="-----------CH-----">CHIHUAHUA</option>
+                                                                                <option value="-----------DF-----">DISTRITO FEDERAL</option>
+                                                                                <option value="-----------CL-----">COAHUILA DE ZARAGOZA</option>
+                                                                                <option value="-----------CM-----">COLIMA</option>
+                                                                                <option value="-----------DG-----">DURANGO</option>
+                                                                                <option value="-----------GT-----">GUANAJUATO</option>
+                                                                                <option value="-----------GR-----">GUERRERO</option>
+                                                                                <option value="-----------HG-----">HIDALGO</option>
+                                                                                <option value="-----------JC-----">JALISCO</option>
+                                                                                <option value="-----------MC-----">ESTADO DE MEXICO</option>
+                                                                                <option value="-----------MN-----">MICHOACAN</option>
+                                                                                <option value="-----------MR-----">MORELOS</option>
+                                                                                <option value="-----------NT-----">NAYARIT</option>
+                                                                                <option value="-----------NL-----">NUEVO LEON</option>
+                                                                                <option value="-----------OC-----">OAXACA</option>
+                                                                                <option value="-----------PL-----">PUEBLA</option>
+                                                                                <option value="-----------QO-----">QUERETARO</option>
+                                                                                <option value="-----------QR-----">QUINTANA ROO</option>
+                                                                                <option value="-----------SP-----">SAN LUIS POTOSI</option>
+                                                                                <option value="-----------SL-----">SINALOA</option>
+                                                                                <option value="-----------SR-----">SONORA</option>
+                                                                                <option value="-----------TC-----">TABASCO</option>
+                                                                                <option value="-----------TS-----">TAMAULIPAS</option>
+                                                                                <option value="-----------TL-----">TLAXCALA</option>
+                                                                                <option value="-----------VZ-----">VERACRUZ</option>
+                                                                                <option value="-----------YN-----">YUCATAN</option>
+                                                                                <option value="-----------ZS-----">ZACATECAS</option>
+                                                                                <option value="-----------XX-----">NACIDOS EN EL EXTRANJERO</option>
+                                                                            </select>
+                                                                        </fieldset>
+                                                                    </div>
+                                                                </div>
+                                                                <p></p>
+                                                                <div id="nacimiento" class="row" *ngIf="actoRegistral==1 || actoRegistral==2">
+                                                                    <h5>
+                                                                        <p>Datos de la Persona
+                                                                            <code></code><code><hr></code>
+                                                                        </p>
+                                                                    </h5>
+                                                                    <div class="error-input" id="error-nombrePersonal">
+                                                                        Debe ingresar este campo</div>
+                                                                    <div class="col-md-6 col-12">
+                                                                        <div class="form-group">
+                                                                            <label for="city-column">Nombre(s)*:</label>
+                                                                            <input type="text" id="nombrePersonal" style="text-transform:uppercase"
+                                                                                class="form-control"
+                                                                                placeholder="Ingresa los nombres" [ngModel]="nombres" (ngModelChange)="onChangeDatos('nombre',$event)"
+                                                                                name="nombrePersonal">
+                                                                        </div>
+                                                                    </div>
+                                                                    <div class="col-md-6 col-12">
+                                                                        <div class="error-input" id="error-apellidoPersonal">
+                                                                            Debe ingresar este campo</div>
+                                                                        <div class="form-group">
+                                                                            <label for="country-floating">Primer
+                                                                                Apellido*:</label>
+                                                                            <input type="text" id="apellidoP" style="text-transform:uppercase"
+                                                                                class="form-control" name="apellidoP" [ngModel]="primerApellido" (ngModelChange)="onChangeDatos('primerApellido',$event)"
+                                                                                placeholder="Ingresa el primer apellido">
+                                                                        </div>
+                                                                    </div>
+                                                                    <p></p>
+                                                                    <div class="error-input" id="error-sexo">
+                                                                        Debe ingresar este campo</div>
+                                                                    <div class="col-md-6 col-12">
+                                                                        <div class="col-12">
+                                                                            <label for="email-id-column">Sexo*:</label>
+                                                                            <div class="form-check">
+                                                                                <input class="form-check-input"  value="Mujer"
+                                                                                    type="radio" name="flexRadioDefault"
+                                                                                    id="flexRadioDefault1" value="Femenino"  [ngModel]="sexo" (ngModelChange)="onChangeDatos('sexo',$event)"> 
+                                                                                <label class="form-check-label"
+                                                                                    for="flexRadioDefault1">
+                                                                                    Mujer
+                                                                                </label>
+                                                                            </div>
+                                                                            <div class="form-check">
+                                                                                <input class="form-check-input" value= "Hombre"
+                                                                                    type="radio" name="flexRadioDefault" value="Masculino" 
+                                                                                    id="flexRadioDefault2" [ngModel]="sexo" (ngModelChange)="onChangeDatos('sexo',$event)">
+                                                                                <label class="form-check-label"
+                                                                                    for="flexRadioDefault2">
+                                                                                    Hombre
+                                                                                </label>
+                                                                            </div>
+                                                                        </div>
+                                                                    </div>
+                                                                    <div class="col-md-6 col-12">
+                                                                        <p></p>
+                                                                        <div class="error-input" id="error-segundoPersonal">
+                                                                            Debe ingresar este campo</div>
+                                                                        <div class="form-group">
+                                                                            <label for="company-column">Segundo
+                                                                                Apellido</label>
+                                                                            <input type="text" id="apellidoM" style="text-transform:uppercase"
+                                                                                class="form-control" name="apellidoM"
+                                                                                placeholder="Ingresa el segundo apellido" [ngModel]="segundoApellido" (ngModelChange)="onChangeDatos('segundoApellido',$event)"> 
+                                                                        </div>
+                                                                    </div>
+                                                                    <p></p>
+                                                                    <div class="error-input" id="error-fecha">
+                                                                        Debe ingresar este campo</div>
+                                                                    <div class="col-md-6 col-12">
+                                                                        <div class="form-group">
+                                                                            <label for="company-column">Fecha de
+                                                                                nacimiento</label>
+                                                                    
+                                                                                
+                                                                                <input type="date" class="form-control" [ngModel]="fechaNacimiento" (ngModelChange)="onChangeDatos('fechaNacimiento',$event)" name="fechaNacimiento" id="fechadeNacimiento"
+                                                                                placeholder="dd-mm-yyyy" 
+                                                                                min="1997-01-01" max="2030-12-31">
+                                                                        </div>
+                                                                    </div>
+                                                                    <div class="col-md-6 col-12">
+                                                                        <div class="form-group">
+                                                                        </div>
+                                                                    </div>
+
+                                                                    <div class="col-12 d-flex justify-content-end">
+                                                                        <button type="submit"
+                                                                            class="btn btn-primary me-1 mb-1" (click)="buscar()">Buscar</button>
+                                                                        <button type="reset"
+                                                                            class="btn btn-light-secondary me-1 mb-1">Limpiar</button>
+                                                                    </div>
+                                                                    <div class="card-body col-sm-12 d-flex justify-content-end" *ngIf="mostrarLoader==1">
+                                                                            <img src="assets/vendors/svg-loaders/ball-triangle.svg" class="me-4"
+                                                                                style="width: 3rem" alt="audio">
+                                                                    </div>
+                                                                </div>
+                                                                
+                                                                <div class="card-content" id="matrimonio" class="row" *ngIf="actoRegistral==3 || actoRegistral==4">
+                                                                    <div class="card-body">
+                                                                        <form class="form">
+                                                                            <div class="row">
+                                                                                <p></p>
+                                                                                <h5>
+                                                                                    <p>Datos de la primera persona
+                                                                                        <code></code><code><hr></code>
+                                                                                    </p>
+                                                                                </h5>
+                                                                                <div class="error-input" id="error-primeraPersonaNombres">
+                                                                                    Debe ingresar este campo</div>
+                                                                                <div class="col-md-6 col-12">
+                                                                                    <div class="form-group">
+                                                                                        <label for="city-column">Nombre(s)*:</label>
+                                                                                        <input type="text" id="nombrePersonalMatrimonio" style="text-transform:uppercase"
+                                                                                            class="form-control"
+                                                                                            placeholder="Ingresa los nombres"
+                                                                                            name="nombrePersonalMatrimonio" [ngModel]="nombres" (ngModelChange)="onChangeDatos('nombre',$event)">
+                                                                                    </div>
+                                                                                </div>
+                                                                                <div class="col-md-6 col-12">
+                                                                                    <div class="error-input" id="error-primeraPersonaApellidoP">
+                                                                                        Debe ingresar este campo</div>
+                                                                                    <div class="form-group">
+                                                                                        <label for="country-floating">Primer
+                                                                                            Apellido*:</label>
+                                                                                        <input type="text" id="apellidoPMatrimonio" style="text-transform:uppercase"
+                                                                                            class="form-control" name="apellidoPMatrimonio"
+                                                                                            placeholder="Ingresa el primer apellido" [ngModel]="primerApellido" (ngModelChange)="onChangeDatos('primerApellido',$event)">
+                                                                                    </div>
+                                                                                </div>
+                                                                                <p></p>
+                                                                                <div class="error-input" id="error-primeraPersonaApellidoM">
+                                                                                    Debe ingresar este campo</div>
+                                                                                <div class="col-md-6 col-12">
+                                                                                    <div class="form-group">
+                                                                                        <label for="company-column">Segundo
+                                                                                            Apellido</label>
+                                                                                        <input type="text" id="apellidoMatrimonio" style="text-transform:uppercase"
+                                                                                            class="form-control" name="apellidoMatrimonio"
+                                                                                            placeholder="Ingresa el segundo apellido" [ngModel]="segundoApellido" (ngModelChange)="onChangeDatos('segundoApellido',$event)">
+                                                                                    </div>
+                                                                                </div>
+                                                                                <div class="col-md-6 col-12">
+                                                                                    <div class="form-group">
+                                                                                    </div>
+                                                                                </div>
+                                                                                <p></p>
+                                                                                <h5>
+                                                                                    <p>Datos de la segunda persona
+                                                                                        <code></code><code><hr></code>
+                                                                                    </p>
+                                                                                </h5>
+                                                                                <div class="error-input" id="error-nombreSegundaPersona">
+                                                                                    Debe ingresar este campo</div>
+                                                                                <div class="col-md-6 col-12">
+                                                                                    <div class="form-group">
+                                                                                        <label for="city-column">Nombre(s)*:</label>
+                                                                                        <input type="text" id="nombrePersonalMatrimonio2" style="text-transform:uppercase"
+                                                                                            class="form-control"
+                                                                                            placeholder="Ingresa los nombres"
+                                                                                            name="nombrePersonalMatrimonio" [ngModel]="nombrePersonaDos" (ngModelChange)="onChangeDatos('nombre2',$event)">
+                                                                                    </div>
+                                                                                </div>
+                                                                                
+                                                                                <div class="col-md-6 col-12">
+                                                                                    <div class="error-input" id="error-apellidoSegundaPersona">
+                                                                                        Debe ingresar este campo</div>
+                                                                                    <div class="form-group">
+                                                                                        <label for="country-floating">Primer
+                                                                                            Apellido*:</label>
+                                                                                        <input type="text" id="apellidoPMatrimonio2" style="text-transform:uppercase"
+                                                                                            class="form-control" name="apellidoPMatrimonio"
+                                                                                            placeholder="Ingresa el primer apellido" [ngModel]="primerApellidoPersonaDos" (ngModelChange)="onChangeDatos('primerApellido2',$event)">
+                                                                                    </div>
+                                                                                </div>
+                                                                                <p></p>
+                                                                                <div class="error-input" id="error-apellidoMSegundaPersona">
+                                                                                    Debe ingresar este campo</div>
+                                                                                <div class="col-md-6 col-12">
+                                                                                    <div class="form-group">
+                                                                                        <label for="company-column">Segundo
+                                                                                            Apellido</label>
+                                                                                        <input type="text" id="apellidoMatrimonio2" style="text-transform:uppercase"
+                                                                                            class="form-control" name="apellidoMatrimonio"
+                                                                                            placeholder="Ingresa el segundo apellido" [ngModel]="segundoApellidoPersonaDos" (ngModelChange)="onChangeDatos('segundoApellido2',$event)">
+                                                                                    </div>
+                                                                                </div>
+                                                                                <div class="col-md-6 col-12">
+                                                                                    <div class="form-group">
+                                                                                    </div>
+                                                                                </div>
+            
+                                                                                <div class="col-12 d-flex justify-content-end">
+                                                                                    <button type="submit" 
+                                                                                        class="btn btn-primary me-1 mb-1" (click)="buscar()">Buscar</button>
+                                                                                    <button type="reset"
+                                                                                        class="btn btn-light-secondary me-1 mb-1">Limpiar</button>
+                                                                                </div>
+                                                                                <div class="card-body col-sm-12 d-flex justify-content-end" *ngIf="mostrarLoader==1">
+                                                                                <img src="assets/vendors/svg-loaders/ball-triangle.svg" class="me-4"
+                                                                                style="width: 3rem" alt="audio">
+                                                                            </div>
+                                                                            </div>
+                                                                        </form>
+                                                                    </div>
+                                                                </div>
+                                                                
+                                                            </div>
+                                                        </form>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+            </div>
+            
+            <footer>
+   
+            </footer>
+        </div>
+    </div>
